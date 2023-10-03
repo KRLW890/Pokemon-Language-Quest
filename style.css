@@ -1,0 +1,66 @@
+
+body
+{
+    text-align: center;
+}
+
+button
+{
+    padding-top:    6px;
+    padding-bottom: 6px;
+}
+button:hover
+{
+    cursor: pointer;
+}
+
+p
+{
+    width: 20%;
+    margin: 5px;
+}
+
+table, #head
+{
+    margin: auto;
+    border-spacing: 0px;
+}
+
+#main
+{
+    //margin-top: 15px;
+    //margin-bottom: 15px;
+}
+
+td
+{
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.navigation
+{
+    border: 0px solid white;
+    padding-top: 0px;
+}
+
+.on, .complete
+{
+    background: #73cb7e;
+}
+
+.off
+{
+    font-weight: bold;
+    background: #fe7551;
+}
+
+.on:hover, .off:hover
+{
+    cursor: pointer;
+}
+
+#searcherror
+{
+    color: red;
+}

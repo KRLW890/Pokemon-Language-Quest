@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Language Quest</title>
+</head>
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="pokemon.js"></script>
+<script src="pokedexes.js"></script>
+<script src="specialMons.js"></script>
+<body>
+
+<table>
+  <tr>
+    <td class="navigation">
+      <table>
+        <tr id="head">
+          <td class="navigation">
+              <label> Pokedex: 
+                <select id="dex" type="checkbox" onchange="switchDexes(this.value);">
+                  <option selected value="-1">National</option>
+                </select>
+              </label>
+          </td>
+          <td class="navigation">
+            <button onclick="openSearch();">Search</button>
+          </td>
+        </tr>
+        <tr id="search" style="display: none;">
+          <td class="navigation"><input type="text" id="searchbar"></input></td>
+          <td class="navigation"><button onclick="search();">Search</button></td>
+          <td class="navigation"><button onclick="closeSearch();">Cancel</button></td>
+          <td class="navigation" id="searcherror"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="navigation">
+      <table>
+        <tr>
+          <td class="navigation"><button onclick="previous();">Previous</button></td>
+          <td class="navigation">
+            <input type="checkbox" id="completed" onclick="next(display[0]);"></input>
+            <label onclick="document.getElementById('completed').click();"> Hide completed entries</label>
+            <br>
+            <input type="checkbox" id="favs" onclick="next(display[0]); updateRatio();"></input>
+            <label onclick="document.getElementById('favs').click();"> Show only favorites</label>
+          </td>
+          <td class="navigation">
+            <input type="checkbox" id="legend" onclick="toggleSpecial(0);"></input>
+            <label onclick="document.getElementById('legend').click();"> Ignore legendaries</label>
+            <br>
+            <input type="checkbox" id="myth" onclick="toggleSpecial(1);"></input>
+            <label onclick="document.getElementById('myth').click();"> Ignore mythicals</label>
+          </td>
+          <td class="navigation">
+            <div id="ratio-in"></div>
+            <div id="ratio-ex"></div>
+          </td>
+          <td class="navigation"><button onclick="next();">Next</button></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td class="navigation">
+<table id="main">
+  <tr id="row0">
+    <td id="0-0" onclick="favToggle(0);"></td>
+    <td id="0dexno"></td>
+    <td id="0sprite"></td>
+    <td id="0name"></td>
+    <td id="0-1" onclick="toggle(0, 1);">ENG</td>
+    <td id="0-2" onclick="toggle(0, 2);">SP-EU</td>
+    <td id="0-3" onclick="toggle(0, 3);">FRE</td>
+    <td id="0-4" onclick="toggle(0, 4);">GER</td>
+    <td id="0-5" onclick="toggle(0, 5);">ITA</td>
+    <td id="0-6" onclick="toggle(0, 6);">JPN</td>
+    <td id="0-7" onclick="toggle(0, 7);">KOR</td>
+    <td id="0-8" onclick="toggle(0, 8);">CHS</td>
+    <td id="0-9" onclick="toggle(0, 9);">CHT</td>
+    <td><button onclick="allOn(0);">All on</button></td>
+    <td><button onclick="allOff(0);">All off</button></td>
+  </tr>
+  <tr id="row1">
+    <td id="1-0" onclick="favToggle(1);"></td>
+    <td id="1dexno"></td>
+    <td id="1sprite"></td>
+    <td id="1name"></td>
+    <td id="1-1" onclick="toggle(1, 1);">ENG</td>
+    <td id="1-2" onclick="toggle(1, 2);">SP-EU</td>
+    <td id="1-3" onclick="toggle(1, 3);">FRE</td>
+    <td id="1-4" onclick="toggle(1, 4);">GER</td>
+    <td id="1-5" onclick="toggle(1, 5);">ITA</td>
+    <td id="1-6" onclick="toggle(1, 6);">JPN</td>
+    <td id="1-7" onclick="toggle(1, 7);">KOR</td>
+    <td id="1-8" onclick="toggle(1, 8);">CHS</td>
+    <td id="1-9" onclick="toggle(1, 9);">CHT</td>
+    <td><button onclick="allOn(1);">All on</button></td>
+    <td><button onclick="allOff(1);">All off</button></td>
+  </tr>
+  <tr id="row2">
+    <td id="2-0" onclick="favToggle(2);"></td>
+    <td id="2dexno"></td>
+    <td id="2sprite"></td>
+    <td id="2name"></td>
+    <td id="2-1" onclick="toggle(2, 1);">ENG</td>
+    <td id="2-2" onclick="toggle(2, 2);">SP-EU</td>
+    <td id="2-3" onclick="toggle(2, 3);">FRE</td>
+    <td id="2-4" onclick="toggle(2, 4);">GER</td>
+    <td id="2-5" onclick="toggle(2, 5);">ITA</td>
+    <td id="2-6" onclick="toggle(2, 6);">JPN</td>
+    <td id="2-7" onclick="toggle(2, 7);">KOR</td>
+    <td id="2-8" onclick="toggle(2, 8);">CHS</td>
+    <td id="2-9" onclick="toggle(2, 9);">CHT</td>
+    <td><button onclick="allOn(2);">All on</button></td>
+    <td><button onclick="allOff(2);">All off</button></td>
+  </tr>
+  <tr id="row3">
+    <td id="3-0" onclick="favToggle(3);"></td>
+    <td id="3dexno"></td>
+    <td id="3sprite"></td>
+    <td id="3name"></td>
+    <td id="3-1" onclick="toggle(3, 1);">ENG</td>
+    <td id="3-2" onclick="toggle(3, 2);">SP-EU</td>
+    <td id="3-3" onclick="toggle(3, 3);">FRE</td>
+    <td id="3-4" onclick="toggle(3, 4);">GER</td>
+    <td id="3-5" onclick="toggle(3, 5);">ITA</td>
+    <td id="3-6" onclick="toggle(3, 6);">JPN</td>
+    <td id="3-7" onclick="toggle(3, 7);">KOR</td>
+    <td id="3-8" onclick="toggle(3, 8);">CHS</td>
+    <td id="3-9" onclick="toggle(3, 9);">CHT</td>
+    <td><button onclick="allOn(3);">All on</button></td>
+    <td><button onclick="allOff(3);">All off</button></td>
+  </tr>
+  <tr id="row4">
+    <td id="4-0" onclick="favToggle(4);"></td>
+    <td id="4dexno"></td>
+    <td id="4sprite"></td>
+    <td id="4name"></td>
+    <td id="4-1" onclick="toggle(4, 1);">ENG</td>
+    <td id="4-2" onclick="toggle(4, 2);">SP-EU</td>
+    <td id="4-3" onclick="toggle(4, 3);">FRE</td>
+    <td id="4-4" onclick="toggle(4, 4);">GER</td>
+    <td id="4-5" onclick="toggle(4, 5);">ITA</td>
+    <td id="4-6" onclick="toggle(4, 6);">JPN</td>
+    <td id="4-7" onclick="toggle(4, 7);">KOR</td>
+    <td id="4-8" onclick="toggle(4, 8);">CHS</td>
+    <td id="4-9" onclick="toggle(4, 9);">CHT</td>
+    <td><button onclick="allOn(4);">All on</button></td>
+    <td><button onclick="allOff(4);">All off</button></td>
+  </tr>
+  <tr id="row5">
+    <td id="5-0" onclick="favToggle(5);"></td>
+    <td id="5dexno"></td>
+    <td id="5sprite"></td>
+    <td id="5name"></td>
+    <td id="5-1" onclick="toggle(5, 1);">ENG</td>
+    <td id="5-2" onclick="toggle(5, 2);">SP-EU</td>
+    <td id="5-3" onclick="toggle(5, 3);">FRE</td>
+    <td id="5-4" onclick="toggle(5, 4);">GER</td>
+    <td id="5-5" onclick="toggle(5, 5);">ITA</td>
+    <td id="5-6" onclick="toggle(5, 6);">JPN</td>
+    <td id="5-7" onclick="toggle(5, 7);">KOR</td>
+    <td id="5-8" onclick="toggle(5, 8);">CHS</td>
+    <td id="5-9" onclick="toggle(5, 9);">CHT</td>
+    <td><button onclick="allOn(5);">All on</button></td>
+    <td><button onclick="allOff(5);">All off</button></td>
+  </tr>
+  <tr id="row6">
+    <td id="6-0" onclick="favToggle(6);"></td>
+    <td id="6dexno"></td>
+    <td id="6sprite"></td>
+    <td id="6name"></td>
+    <td id="6-1" onclick="toggle(6, 1);">ENG</td>
+    <td id="6-2" onclick="toggle(6, 2);">SP-EU</td>
+    <td id="6-3" onclick="toggle(6, 3);">FRE</td>
+    <td id="6-4" onclick="toggle(6, 4);">GER</td>
+    <td id="6-5" onclick="toggle(6, 5);">ITA</td>
+    <td id="6-6" onclick="toggle(6, 6);">JPN</td>
+    <td id="6-7" onclick="toggle(6, 7);">KOR</td>
+    <td id="6-8" onclick="toggle(6, 8);">CHS</td>
+    <td id="6-9" onclick="toggle(6, 9);">CHT</td>
+    <td><button onclick="allOn(6);">All on</button></td>
+    <td><button onclick="allOff(6);">All off</button></td>
+  </tr>
+  <tr id="row7">
+    <td id="7-0" onclick="favToggle(7);"></td>
+    <td id="7dexno"></td>
+    <td id="7sprite"></td>
+    <td id="7name"></td>
+    <td id="7-1" onclick="toggle(7, 1);">ENG</td>
+    <td id="7-2" onclick="toggle(7, 2);">SP-EU</td>
+    <td id="7-3" onclick="toggle(7, 3);">FRE</td>
+    <td id="7-4" onclick="toggle(7, 4);">GER</td>
+    <td id="7-5" onclick="toggle(7, 5);">ITA</td>
+    <td id="7-6" onclick="toggle(7, 6);">JPN</td>
+    <td id="7-7" onclick="toggle(7, 7);">KOR</td>
+    <td id="7-8" onclick="toggle(7, 8);">CHS</td>
+    <td id="7-9" onclick="toggle(7, 9);">CHT</td>
+    <td><button onclick="allOn(7);">All on</button></td>
+    <td><button onclick="allOff(7);">All off</button></td>
+  </tr>
+  <tr id="row8">
+    <td id="8-0" onclick="favToggle(8);"></td>
+    <td id="8dexno"></td>
+    <td id="8sprite"></td>
+    <td id="8name"></td>
+    <td id="8-1" onclick="toggle(8, 1);">ENG</td>
+    <td id="8-2" onclick="toggle(8, 2);">SP-EU</td>
+    <td id="8-3" onclick="toggle(8, 3);">FRE</td>
+    <td id="8-4" onclick="toggle(8, 4);">GER</td>
+    <td id="8-5" onclick="toggle(8, 5);">ITA</td>
+    <td id="8-6" onclick="toggle(8, 6);">JPN</td>
+    <td id="8-7" onclick="toggle(8, 7);">KOR</td>
+    <td id="8-8" onclick="toggle(8, 8);">CHS</td>
+    <td id="8-9" onclick="toggle(8, 9);">CHT</td>
+    <td><button onclick="allOn(8);">All on</button></td>
+    <td><button onclick="allOff(8);">All off</button></td>
+  </tr>
+  <tr id="row9">
+    <td id="9-0" onclick="favToggle(9);"></td>
+    <td id="9dexno"></td>
+    <td id="9sprite"></td>
+    <td id="9name"></td>
+    <td id="9-1" onclick="toggle(9, 1);">ENG</td>
+    <td id="9-2" onclick="toggle(9, 2);">SP-EU</td>
+    <td id="9-3" onclick="toggle(9, 3);">FRE</td>
+    <td id="9-4" onclick="toggle(9, 4);">GER</td>
+    <td id="9-5" onclick="toggle(9, 5);">ITA</td>
+    <td id="9-6" onclick="toggle(9, 6);">JPN</td>
+    <td id="9-7" onclick="toggle(9, 7);">KOR</td>
+    <td id="9-8" onclick="toggle(9, 8);">CHS</td>
+    <td id="9-9" onclick="toggle(9, 9);">CHT</td>
+    <td><button onclick="allOn(9);">All on</button></td>
+    <td><button onclick="allOff(9);">All off</button></td>
+  </tr>
+</table>
+    </td>
+  </tr>
+</table>
+
+<br>
+
+<div id="save-normal">
+  <button id="save" onclick="save();">Saved!</button>
+  <button onclick="openImportWindow();">Import/Export</button>
+</div>
+<div id="importWindow" style="display: none;">
+  <textarea id="importBox"></textarea>
+  <button onclick="importData();">Import</button>
+  <button onclick="closeImportWindow();">Close</button>
+</div>
+
+</body>
+
+<script>
+var data = [];
+if (localStorage.getItem("pkmnLQ") == null)
+{
+    for (var i = 0; i < pokemonNames.length; i++)
+        data.push([0,1,0,0,0,0,0,0,0,0]);
+    localStorage.setItem("pkmnLQ", JSON.stringify(data));
+}
+else
+{
+    data = JSON.parse(localStorage.getItem("pkmnLQ"));
+    for (var i = data.length; i < pokemonNames.length; i++)
+        data.push([0,1,0,0,0,0,0,0,0,0]);
+}
+
+var dex = -1;
+var ratio = {
+    all: [0, 0],
+    fav: [0, 0],
+    dex: [0, 0],
+    dexfav: [0, 0]
+};
+for (var i = 0; i < data.length; i++)
+{
+    for (var j = 1; j < data[i].length; j++)
+    {
+        ratio.all[1]++;
+        if (data[i][j] == 1)
+            ratio.all[0]++;
+        if (data[i][0] == 1)
+        {
+            ratio.fav[1]++;
+            if (data[i][j] == 1)
+                ratio.fav[0]++;
+        }
+    }
+}
+
+for (var i = 0; i < pokedexes.length; i++)
+{
+    var option = document.createElement("option");
+    option.value = i;
+    option.innerText = pokedexes[i].name;
+    document.getElementById("dex").appendChild(option);
+}
+
+document.getElementById("searchbar").addEventListener("keyup", function(event) {
+    event.preventDefault();
+    if (event.keyCode == 13)
+        search();
+});
+
+var display = [0,1,2,3,4,5,6,7,8,9];
+
+var fillTable = function()
+{
+for (var i = 0; i < display.length; i++)
+{
+  if (display[i] != -1)
+  {
+    var natno;
+    if (dex == -1)
+        natno = display[i];
+    else
+        natno = pokedexes[dex].list[display[i]] - 1;
+    var sprite = document.createElement("img");
+    sprite.src = "https://www.serebii.net/pokedex-sv/icon/";
+    document.getElementById(i+"dexno").innerText = "#";
+    if (natno < 99)
+        sprite.src += "0";
+    if (natno < 9)
+        sprite.src += "0";
+    if (dex != -1 && pokedexes[dex].useNatNo == true)
+    {
+        if ((dex == -1 || pokedexes[dex].list.length >= 1000) && natno < 999)
+            document.getElementById(i+"dexno").innerText += "0";
+        if (natno < 99)
+            document.getElementById(i+"dexno").innerText += "0";
+        if (natno < 9)
+            document.getElementById(i+"dexno").innerText += "0";
+    }
+    else
+    {
+        if ((dex == -1 || pokedexes[dex].list.length >= 1000) && display[i] < 999)
+            document.getElementById(i+"dexno").innerText += "0";
+        if (display[i] < 99)
+            document.getElementById(i+"dexno").innerText += "0";
+        if (display[i] < 9)
+            document.getElementById(i+"dexno").innerText += "0";
+    }
+    sprite.src += (natno + 1);
+    if (dex != -1 && pokedexes[dex].regional != undefined)
+    {
+//console.log(imageExists(sprite.src + pokedexes[dex].regional + ".png"))
+        if (imageExists(sprite.src + pokedexes[dex].regional + ".png"))
+            sprite.src += pokedexes[dex].regional;
+    }
+    sprite.src += ".png";
+    sprite.height = 32;
+    document.getElementById(i+"sprite").innerHTML = "";
+    document.getElementById(i+"sprite").appendChild(sprite);
+    if (dex != -1 && pokedexes[dex].unova == true)
+    {
+        if (display[i] == 9 || display[i] == 99)
+            document.getElementById(i+"dexno").innerText += "0";
+        document.getElementById(i+"dexno").innerText += "" + display[i];
+    }
+    else if (dex != -1 && pokedexes[dex].useNatNo == true)
+        document.getElementById(i+"dexno").innerText += "" + (natno+1);
+    else
+        document.getElementById(i+"dexno").innerText += "" + (display[i]+1);
+    document.getElementById(i+"name").innerText = pokemonNames[natno];
+    var fav = document.createElement("img");
+    fav.src = "star" + data[natno][0] + ".png";
+    document.getElementById(i+"-0").innerHTML = "";
+    document.getElementById(i+"-0").appendChild(fav);
+    
+    var completeFlag = true;
+    for (var j = 1; j < data[natno].length; j++)
+    {
+        if (data[natno][j])
+        {
+            document.getElementById(i+"-"+j).classList.remove("off");
+            document.getElementById(i+"-"+j).classList.add("on");
+        }
+        else
+        {
+            document.getElementById(i+"-"+j).classList.remove("on");
+            document.getElementById(i+"-"+j).classList.add("off");
+            completeFlag = false;
+        }
+    }
+    if (completeFlag)
+        document.getElementById("row"+i).classList.add("complete");
+    else
+        document.getElementById("row"+i).classList.remove("complete");
+  }
+  else
+  {
+    
+    var fav = document.createElement("img");
+    fav.src = "star0.png";
+    document.getElementById(i+"-0").innerHTML = "";
+    document.getElementById(i+"-0").appendChild(fav);
+    document.getElementById(i+"dexno").innerText = "#---";
+    document.getElementById(i+"sprite").innerHTML = "";
+    document.getElementById(i+"name").innerText = "";
+    
+    for (var j = 1; j < data[0].length; j++)
+    {
+        document.getElementById(i+"-"+j).classList.remove("off");
+        document.getElementById(i+"-"+j).classList.remove("on");
+    }
+    document.getElementById("row"+i).classList.remove("complete");
+  }
+}
+};
+var updateRatio = function()
+{
+    if (document.getElementById("favs").checked)
+    {
+        if (dex == -1)
+        {
+            document.getElementById("ratio-in").innerText = (Math.round(1000*ratio.fav[0]/ratio.fav[1])/10) + "% complete w/ ENG (";
+            document.getElementById("ratio-in").innerText += ratio.fav[0] + " / " + ratio.fav[1] + ")";
+            document.getElementById("ratio-ex").innerText = (Math.round(1000*(ratio.fav[0] - ratio.fav[1]/9) / (ratio.fav[1] * 8 / 9))/10) + "% complete w/o ENG (";
+            document.getElementById("ratio-ex").innerText += (ratio.fav[0] - ratio.fav[1]/9) + " / " + (ratio.fav[1] * 8 / 9) + ")";
+        }
+        else
+        {
+            document.getElementById("ratio-in").innerText = (Math.round(1000*ratio.dexfav[0]/ratio.dexfav[1])/10) + "% complete w/ ENG (";
+            document.getElementById("ratio-in").innerText += ratio.dexfav[0] + " / " + ratio.dexfav[1] + ")";
+            document.getElementById("ratio-ex").innerText = (Math.round(1000*(ratio.dexfav[0] - ratio.dexfav[1]/9) / (ratio.dexfav[1] * 8 / 9))/10) + "% complete w/o ENG (";
+            document.getElementById("ratio-ex").innerText += (ratio.dexfav[0] - ratio.dexfav[1]/9) + " / " + (ratio.dexfav[1] * 8 / 9) + ")";
+        }
+    }
+    else
+    {
+        if (dex == -1)
+        {
+            document.getElementById("ratio-in").innerText = (Math.round(1000*ratio.all[0]/ratio.all[1])/10) + "% complete w/ ENG (";
+            document.getElementById("ratio-in").innerText += ratio.all[0] + " / " + ratio.all[1] + ")";
+            document.getElementById("ratio-ex").innerText = (Math.round(1000*(ratio.all[0] - ratio.all[1]/9) / (ratio.all[1] - ratio.all[1]/9))/10) + "% complete w/o ENG (";
+            document.getElementById("ratio-ex").innerText += (ratio.all[0] - ratio.all[1]/9) + " / " + (ratio.all[1] - ratio.all[1]/9) + ")";
+        }
+        else
+        {
+            document.getElementById("ratio-in").innerText = (Math.round(1000*ratio.dex[0]/ratio.dex[1])/10) + "% complete w/ ENG (";
+            document.getElementById("ratio-in").innerText += ratio.dex[0] + " / " + ratio.dex[1] + ")";
+            document.getElementById("ratio-ex").innerText = (Math.round(1000*(ratio.dex[0] - ratio.dex[1]/9) / (ratio.dex[1] - ratio.dex[1]/9))/10) + "% complete w/o ENG (";
+            document.getElementById("ratio-ex").innerText += (ratio.dex[0] - ratio.dex[1]/9) + " / " + (ratio.dex[1] - ratio.dex[1]/9) + ")";
+        }
+    }
+};
+fillTable();
+updateRatio();
+
+var save = function()
+{
+    localStorage.setItem("pkmnLQ", JSON.stringify(data));
+    document.getElementById("save").innerText = "Saved!";
+};
+
+var toggle = function(id, lang)
+{
+    if (display[id] != -1)
+    {
+        var natno = display[id];
+        if (dex != -1)
+            natno = pokedexes[dex].list[display[id]] - 1;
+        if (data[natno][lang] == 0)
+        {
+            data[natno][lang] = 1;
+            ratio.all[0]++;
+            ratio.dex[0]++;
+            if (data[natno][0] == 1)
+            {
+                ratio.fav[0]++;
+                ratio.dexfav[0]++;
+            }
+            updateRatio();
+            document.getElementById(id+"-"+lang).classList.remove("off");
+            document.getElementById(id+"-"+lang).classList.add("on");
+            for (var i = 1; i < data[natno].length; i++)
+            {
+                if (data[natno][i] == 0)
+                    break;
+            }
+            if (i == data[natno].length)
+                document.getElementById("row"+id).classList.add("complete");
+        }
+        else
+        {
+            data[natno][lang] = 0;
+            ratio.all[0]--;
+            ratio.dex[0]--;
+            if (data[natno][0] == 1)
+            {
+                ratio.fav[0]--;
+                ratio.dexfav[0]--;
+            }
+            updateRatio();
+            document.getElementById(id+"-"+lang).classList.remove("on");
+            document.getElementById(id+"-"+lang).classList.add("off");
+            document.getElementById("row"+id).classList.remove("complete");
+        }
+        document.getElementById("save").innerText = "Save";
+    }
+};
+
+var favToggle = function(id)
+{
+    if (display[id] != -1)
+    {
+        var natno = display[id];
+        if (dex != -1)
+            natno = pokedexes[dex].list[display[id]] - 1;
+        data[natno][0] = (data[natno][0] - 1) * -1;
+        document.getElementById(id+"-"+0).children[0].src = "star" + data[natno][0] + ".png";
+        for (var i = 1; i < data[0].length; i++)
+        {
+            if (data[natno][0] == 0)
+            {
+                ratio.fav[1]--;
+                ratio.dexfav[1]--;
+                if (data[natno][i] == 1)
+                {
+                    ratio.fav[0]--;
+                    ratio.dexfav[0]--;
+                }
+            }
+            else
+            {
+                ratio.fav[1]++;
+                ratio.dexfav[1]++;
+                if (data[natno][i] == 1)
+                {
+                    ratio.fav[0]++;
+                    ratio.dexfav[0]++;
+                }
+            }
+        }
+        updateRatio();
+        document.getElementById("save").innerText = "Save";
+    }
+}
+
+var allOn = function(id)
+{
+    if (display[id] != -1)
+    {
+        var natno = display[id];
+        if (dex != -1)
+            natno = pokedexes[dex].list[display[id]] - 1;
+        for (var i = 1; i < data[natno].length; i++)
+        {
+            if (data[natno][i] == 0)
+            {
+                ratio.all[0]++;
+                if (data[natno][0] == 1)
+                    ratio.fav[0]++;
+            }
+            data[natno][i] = 1;
+            document.getElementById(id+"-"+i).classList.remove("off");
+            document.getElementById(id+"-"+i).classList.add("on");
+        }
+        updateRatio();
+        document.getElementById("row"+id).classList.add("complete");
+        document.getElementById("save").innerText = "Save";
+    }
+}
+var allOff = function(id)
+{
+    if (display[id] != -1)
+    {
+        var natno = display[id];
+        if (dex != -1)
+            natno = pokedexes[dex].list[display[id]] - 1;
+        for (var i = 1; i < data[natno].length; i++)
+        {
+            if (data[natno][i] == 1)
+            {
+                ratio.all[0]--;
+                if (data[natno][0] == 1)
+                    ratio.fav[0]--;
+            }
+            data[natno][i] = 0;
+            document.getElementById(id+"-"+i).classList.remove("on");
+            document.getElementById(id+"-"+i).classList.add("off");
+        }
+        updateRatio();
+        document.getElementById("row"+id).classList.remove("complete");
+        document.getElementById("save").innerText = "Save";
+    }
+}
+
+var next = function(start, forceFirst)
+{
+    var temp = [];
+    var i = display[9]+1;
+    if (start != undefined)
+        i = start;
+    else if (i == -1)
+        i = display[0];
+    
+    for (var i; dex == -1 && i < data.length || dex != -1 && i < pokedexes[dex].list.length; i++)
+    {
+        var natno = i;
+        if (dex != -1)
+            natno = pokedexes[dex].list[i] - 1;
+        var valid = true;
+        if (forceFirst != true || i != start)
+        {
+            if (document.getElementById("favs").checked && data[natno][0] == 0)
+                valid = false;
+            if (valid && document.getElementById("legend").checked)
+            {
+                for (var j = 0; j < specialMons[0].length; j++)
+                {
+                    if (specialMons[0][j] - 1 == natno)
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+            }
+            if (valid && document.getElementById("myth").checked)
+            {
+                for (var j = 0; j < specialMons[1].length; j++)
+                {
+                    if (specialMons[1][j] - 1 == natno)
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+            }
+            if (valid && document.getElementById("completed").checked)
+            {
+                valid = false;
+                for (var j = 1; j < data[natno].length; j++)
+                {
+                    if (data[natno][j] == 0)
+                    {
+                        valid = true;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        if (valid)
+            temp.push(i);
+        if (temp.length >= 10)
+            break;
+    }
+    if (temp.length < 10)
+    {
+        if (start == undefined)
+        {
+            for (var i = 0; i + temp.length < display.length; i++)
+                display[i] = display[i + temp.length];
+            for (var i = 0; i < temp.length; i++)
+                display[display.length - (temp.length - i)] = temp[i];
+        }
+        else
+        {
+            while (temp.length < 10)
+                temp.push(-1);
+            display = temp;
+        }
+    }
+    else
+        display = temp;
+    fillTable();
+};
+
+var previous = function()
+{
+    var temp = [];
+    for (var i = display[0]-1; i >= 0; i--)
+    {
+        var natno = i;
+        if (dex != -1)
+            natno = pokedexes[dex].list[i] - 1;
+        var valid = true;
+        if (document.getElementById("favs").checked && data[natno][0] == 0)
+            valid = false;
+        if (valid && document.getElementById("legend").checked)
+        {
+            for (var j = 0; j < specialMons[0].length; j++)
+            {
+                if (specialMons[0][j] - 1 == natno)
+                {
+                    valid = false;
+                    break;
+                }
+            }
+        }
+        if (valid && document.getElementById("myth").checked)
+        {
+            for (var j = 0; j < specialMons[1].length; j++)
+            {
+                if (specialMons[1][j] - 1 == natno)
+                {
+                    valid = false;
+                    break;
+                }
+            }
+        }
+        if (valid && document.getElementById("completed").checked)
+        {
+            valid = false;
+            for (var j = 1; j < data[i].length; j++)
+            {
+                if (data[natno][j] == 0)
+                {
+                    valid = true;
+                    break;
+                }
+            }
+        }
+        
+        if (valid)
+            temp.push(i);
+        if (temp.length >= display.length)
+            break;
+    }
+    var i = 9;
+    if (temp.length < display.length)
+    {
+        for (i; i >= temp.length; i--)
+            display[i] = display[i - temp.length];
+    }
+    for (i; i >= 0; i--)
+        display[temp.length - 1 - i] = temp[i];
+    
+    fillTable();
+};
+
+var openSearch = function()
+{
+    document.getElementById("head").style.display = "none";
+    document.getElementById("search").style.display = "";
+    document.getElementById("searchbar").value = "";
+    document.getElementById("searchbar").focus();
+    document.getElementById("searcherror").innerText = "";
+};
+
+var closeSearch = function()
+{
+    document.getElementById("head").style.display = "";
+    document.getElementById("search").style.display = "none";
+    document.getElementById("searchbar").value = "";
+    document.getElementById("searcherror").innerText = "";
+};
+
+var search = function()
+{
+    var input = document.getElementById("searchbar").value;
+    var output = -1;
+    if (input.length >= 3 && input.length <= 12)
+    {
+        for (var i = 0; i < pokemonNames.length; i++)
+        {
+            if (pokemonNames[i].toLowerCase() == input.toLowerCase())
+            {
+                output = i;
+                break;
+            }
+        }
+    }
+    if (output == -1)
+        document.getElementById("searcherror").innerText = "Pokemon not found";
+    else
+    {
+        if (dex != -1)
+        {
+            var available = false;
+            for (var i = 0; i < pokedexes[dex].list.length; i++)
+            {
+                if (output == pokedexes[dex].list[i] - 1)
+                {
+                    output = i;
+                    available = true;
+                    break;
+                }
+            }
+            if (available == false)
+            {
+                document.getElementById("dex").value = -1;
+                dex = -1;
+                updateRatio();
+            }
+        }
+        next(output, true);
+        closeSearch();
+    }
+};
+
+var switchDexes = function(input)
+{
+    dex = input;
+    if (dex != -1)
+    {
+        ratio.dex = [0, 0];
+        ratio.dexfav = [0, 0];
+        for (var i = 0; i < pokedexes[dex].list.length; i++)
+        {
+            var valid = true;
+            if (document.getElementById("legend").checked)
+            {
+                for (var j = 0; j < specialMons[0].length; j++)
+                {
+                    if (pokedexes[dex].list[i] == specialMons[0][j])
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+            }
+            if (document.getElementById("myth").checked)
+            {
+                for (var j = 0; j < specialMons[1].length; j++)
+                {
+                    if (pokedexes[dex].list[i] == specialMons[1][j])
+                    {
+                        valid = false;
+                        break;
+                    }
+                }
+            }
+            if (valid)
+            {
+                for (var j = 1; j < data[0].length; j++)
+                {
+                    ratio.dex[1]++;
+                    if (data[pokedexes[dex].list[i]-1][0] == 1)
+                        ratio.dexfav[1]++;
+                    if (data[pokedexes[dex].list[i]-1][j] == 1)
+                    {
+                        ratio.dex[0]++;
+                        if (data[pokedexes[dex].list[i]-1][0] == 1)
+                            ratio.dexfav[0]++;
+                    }
+                }
+            }
+        }
+    }
+    updateRatio();
+    next(0);
+};
+
+var toggleSpecial = function(input)
+{
+    var increment = 1;
+    if (input == 0 && document.getElementById("legend").checked || input == 1 && document.getElementById("myth").checked)
+        increment = -1;
+    if (dex != -1)
+    {
+        for (var i = 0; i < specialMons[input].length; i++)
+        {
+            for (var j = pokedexes[dex].list.length-1; j >= 0; j--)
+            {
+                if (specialMons[input][i] == pokedexes[dex].list[j])
+                {
+                    for (var k = 1; k < data[specialMons[input][i]-1].length; k++)
+                    {
+                        ratio.dex[1] += increment;
+                        if (data[specialMons[input][i]-1][k] == 1)
+                            ratio.dex[0] += increment;
+                        if (data[specialMons[input][i]-1][0] == 1)
+                        {
+                            ratio.dexfav[1] += increment;
+                            if (data[specialMons[input][i]-1][k] == 1)
+                                ratio.dexfav[0] += increment;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    for (var i = 0; i < specialMons[input].length; i++)
+    {
+        for (var j = 1; j < data[specialMons[input][i]-1].length; j++)
+        {
+            ratio.all[1] += increment;
+            if (data[specialMons[input][i]-1][j] == 1)
+                ratio.all[0] += increment;
+            if (data[specialMons[input][i]-1][0] == 1)
+            {
+                ratio.fav[1] += increment;
+                if (data[specialMons[input][i]-1][j] == 1)
+                    ratio.fav[0] += increment;
+            }
+        }
+    }
+
+    next(display[0]);
+    updateRatio();
+};
+
+var openImportWindow = function()
+{
+    document.getElementById("save-normal").style.display = "None";
+    document.getElementById("importWindow").style.display = "";
+    document.getElementById("importBox").value = JSON.stringify(data);
+};
+
+var closeImportWindow = function()
+{
+    document.getElementById("save-normal").style.display = "";
+    document.getElementById("importWindow").style.display = "None";
+};
+
+var importData = function()
+{
+    data = JSON.parse(document.getElementById("importBox").value);
+    closeImportWindow();
+    document.getElementById("save").innerText = "Save";
+    switchDexes(-1);
+};
+
+function imageExists(url) {
+return false;
+/*
+  var output = new Promise(resolve => {
+    var img = new Image()
+    img.addEventListener('load', () => resolve(true))
+    img.addEventListener('error', () => resolve(false))
+    img.src = url
+  })
+  for (var i = 0; i < 100; i++)
+  {
+      if (i == 99) console.log(output);
+      if (i == 99) return false;
+      //if (i == 0) {console.log("Start, " + url);console.log(output["<pending>"]);}
+  }
+  return output;
+*/
+}
+
+</script>
+</html>

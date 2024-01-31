@@ -1016,5 +1016,13 @@ var pokemonNames =
 "Okidogi",
 "Munkidori",
 "Fezandipiti",
-"Ogerpon"
+"Ogerpon",
+"Archaludon",
+"Hydrapple",
+"Gouging Fire",
+"Raging Bolt",
+"Iron Boulder",
+"Iron Crown",
+"Terapagos",
+"Pecharunt"
 ];

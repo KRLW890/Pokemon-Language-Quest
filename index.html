@@ -358,7 +358,7 @@ for (var i = 0; i < display.length; i++)
         sprite.src += "0";
     if (dex != -1 && pokedexes[dex].useNatNo == true)
     {
-        if ((dex == -1 || pokedexes[dex].list.length >= 1000) && natno < 999)
+        if (natno < 999)
             document.getElementById(i+"dexno").innerText += "0";
         if (natno < 99)
             document.getElementById(i+"dexno").innerText += "0";

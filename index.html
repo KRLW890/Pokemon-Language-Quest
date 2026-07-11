@@ -4,7 +4,7 @@
 <title>Language Quest</title>
 </head>
 <link rel="stylesheet" type="text/css" href="style.css">
-<script src="pokemon.js"></script>
+<script src="languages/pokemon_eng.js"></script>
 <script src="pokedexes.js"></script>
 <script src="specialMons.js"></script>
 <body>
@@ -330,10 +330,19 @@ for (var i = 0; i < pokedexes.length; i++)
     document.getElementById("dex").appendChild(option);
 }
 
+document.addEventListener('keydown', function(event) {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'f') {
+        event.preventDefault();
+        openSearch();
+    }
+});
+
 document.getElementById("searchbar").addEventListener("keyup", function(event) {
     event.preventDefault();
-    if (event.keyCode == 13)
+    if (event.keyCode == 13) // enter
         search();
+    else if (event.keyCode == 27) // esc
+        closeSearch();
 });
 
 var display = [0,1,2,3,4,5,6,7,8,9];
@@ -466,14 +475,14 @@ var updateRatio = function()
         {
             document.getElementById("ratio-in").innerText = (Math.round(1000*ratio.all[0]/ratio.all[1])/10) + "% complete w/ ENG (";
             document.getElementById("ratio-in").innerText += ratio.all[0] + " / " + ratio.all[1] + ")";
-            document.getElementById("ratio-ex").innerText = (Math.round(1000*(ratio.all[0] - ratio.all[1]/10) / (ratio.all[1] - ratio.all[1]/9))/10) + "% complete w/o ENG (";
+            document.getElementById("ratio-ex").innerText = (Math.round(1000*(ratio.all[0] - ratio.all[1]/10) / (ratio.all[1] - ratio.all[1]/10))/10) + "% complete w/o ENG (";
             document.getElementById("ratio-ex").innerText += (ratio.all[0] - ratio.all[1]/10) + " / " + (ratio.all[1] - ratio.all[1]/10) + ")";
         }
         else
         {
             document.getElementById("ratio-in").innerText = (Math.round(1000*ratio.dex[0]/ratio.dex[1])/10) + "% complete w/ ENG (";
             document.getElementById("ratio-in").innerText += ratio.dex[0] + " / " + ratio.dex[1] + ")";
-            document.getElementById("ratio-ex").innerText = (Math.round(1000*(ratio.dex[0] - ratio.dex[1]/9) / (ratio.dex[1] - ratio.dex[1]/9))/10) + "% complete w/o ENG (";
+            document.getElementById("ratio-ex").innerText = (Math.round(1000*(ratio.dex[0] - ratio.dex[1]/10) / (ratio.dex[1] - ratio.dex[1]/10))/10) + "% complete w/o ENG (";
             document.getElementById("ratio-ex").innerText += (ratio.dex[0] - ratio.dex[1]/10) + " / " + (ratio.dex[1] - ratio.dex[1]/10) + ")";
         }
     }
